@@ -7,6 +7,10 @@
 		margin-block-start:0.1em;
 		margin-block-end:0.1em;
 	}
+	h5{
+		margin-block-start:0.1em;
+		margin-block-end:0.1em;
+	}
 }
 
 
@@ -27,8 +31,12 @@ body{
 
 #main-hat>h1{
 	display:inline-block;
+	margin-block-end:0px;
 }
-
+#main-hat>h5{
+	text-align:center;
+	margin-block-start:0px;
+}
 #files-viewer{
 	margin-top:1em;
 }
