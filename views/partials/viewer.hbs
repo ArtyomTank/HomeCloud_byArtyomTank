@@ -1,0 +1,40 @@
+<button id="reload">🔄Обновить</button>
+<table id="table-view">
+	<tr>
+		<th>Имя</th>
+		<th>Управление</th>
+		<th>Дата</th>
+	</tr>
+	
+</table>
+<script type="text/javascript">
+	//init
+	let pageData = {'page':'1', 'length':30, 'dir':"/"};
+	let tdControll = $('<td></td>');
+	
+	function ReloadContent(){
+		$('#table-view').html('<tr><th>Имя</th><th>Управление</th><th>Дата</th></tr>');
+		$.get('/view-uploaded', pageData,
+			function(data) {
+				console.log(data);
+				for(let i in data){
+					let tr = $('<tr></tr>');
+					let tdName = $('<td></td>');
+					let tdDate = $('<td></td>');
+					let a = $('<a download></a>')
+					
+					a.attr('href','/download/'+data[i]);
+					a.append(data[i]);
+					tdName.append(a);
+					tr.append(tdName).append(tdControll).append(tdDate);
+					
+					$('#table-view').append(tr);
+				}
+			});
+	}
+	
+	$('button#reload').bind('click',ReloadContent);
+	
+	//first load
+	ReloadContent();
+</script>

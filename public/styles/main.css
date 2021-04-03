@@ -1,0 +1,34 @@
+/*media*/
+@media only screen and (max-device-width: 720px) {
+	body{
+		font-size:3em;
+	}
+	h1{
+		margin-block-start:0.1em;
+		margin-block-end:0.1em;
+	}
+}
+
+
+
+/* main */
+body{
+	font-family:monospace;
+	margin:2px;
+}
+#main-hat{
+	font-family:consolas,lucida console;
+}
+#main-hat, #main-context{
+	border:solid 1px black;
+	padding:6px;
+	margin-bottom:4px;
+}
+
+#main-hat>h1{
+	display:inline-block;
+}
+
+#files-viewer{
+	margin-top:1em;
+}
