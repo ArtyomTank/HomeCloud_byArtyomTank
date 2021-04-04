@@ -59,9 +59,17 @@ function ReloadContent(){
 				
 				a.attr('href','/download/'+data.files[i]);
 				a.append(data.files[i]);
+				a.click(ReloadContent);
 				
 				tdName.append(a);
+				tdName.attr('class', 'col-name');
+				
 				tdControll.append(delBut).append(" ").append(viewBut).append(" ").append(renameBut);
+				tdControll.attr('class', 'col-controll');
+				
+				tdDate.append("");
+				tdDate.attr('class', 'col-data');
+				
 				tr.append(tdName).append(tdControll).append(tdDate);
 				
 				$('#table-view').append(tr);

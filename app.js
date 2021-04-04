@@ -61,6 +61,8 @@ app.get("/download/:file",function (req, res){
 	let filePath = ServerCloudFiles + '\\' + req.params["file"];
 	if (fs.existsSync(filePath)) {
 		res.sendFile(filePath);
+	} else {
+		res.send();
 	}
 })
 
