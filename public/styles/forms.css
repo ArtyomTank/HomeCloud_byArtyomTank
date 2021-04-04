@@ -68,3 +68,8 @@ div#result{
 	border-bottom:solid 1px grey;
 }
 
+#table-view tr:hover{
+	background: #dddddd;
+	transition:1s;
+}
+

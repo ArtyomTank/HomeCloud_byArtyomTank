@@ -41,9 +41,19 @@ app.get("/",function (req, res){
 app.get("/view-uploaded",function(req,res,next){
 	//console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
+	let files = new Array();
+	let dir = new Array();
 	
 	fs.readdir(ServerCloudFiles, function(err, items) {
-		res.json(items);
+		for (var i=0; i<items.length; i++) {
+			if(fs.statSync(ServerCloudFiles + '\\' + items[i]).isDirectory()){
+				dir.push(items[i]);
+			}
+			else{
+				files.push(items[i]);
+			}
+		}
+		res.json({'files':files, 'dir':dir});
 	});
 })
 
@@ -55,14 +65,34 @@ app.get("/download/:file",function (req, res){
 })
 
 app.get("/controll/:file/:action",function(req,res){
+	let filePath = ServerCloudFiles + '\\' + req.params["file"];
 	
-	if(req.params['action'] == 'delete'){
-		filePath = ServerCloudFiles + '\\' + req.params["file"];
-		fs.unlink(filePath, (err) => {
-				if (err) console.log(err); // если возникла ошибка    
-				else console.log(`${req.params["file"]} was deleted`);
-				res.send(`${req.params["file"]} was deleted`)
-			});
+	try{
+		if (fs.existsSync(filePath)){
+			//delete
+			if(req.params['action'] == 'delete'){
+				fs.unlink(filePath, (err) => {
+						if (err) throw err; // если возникла ошибка    
+						console.log(`${req.params["file"]} was deleted`);
+						res.send(`${req.params["file"]} was deleted`);
+					});
+			}
+			//rename
+			if(req.params['action'] == 'rename'){
+				if (!req.query.newname)
+					return res.send(`Ошибка при переименовывании файла`)
+				let newname = ServerCloudFiles + '\\' + req.query.newname;
+				fs.rename(filePath, newname, (err) => {
+						if (err) throw err;// если возникла ошибка    
+						console.log(`${req.params["file"]} переименован в ${req.query.newname}`);
+						res.send(`${req.params["file"]} переименован в ${req.query.newname}`);
+					});
+			}
+			return;
+		}
+	} 
+	catch (err){
+		console.error(err);
 	}
 })
 
