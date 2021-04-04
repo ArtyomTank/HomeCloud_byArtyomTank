@@ -1,4 +1,5 @@
-let pageData = {'page':1, 'length':50, 'dir':"/"};
+let pageData = {'page':1, 'length':50, 'dir':""}; //dir = "mn/gg/" or "nm/" or "" e.t.c.
+let oldDir = new Array("");
 	
 function RenameBut_Click(e){
 	let elem = $(e.target);
@@ -74,6 +75,47 @@ function ReloadContent(){
 				
 				$('#table-view').append(tr);
 			}
+			
+			for(let i in data.dir){
+				let tr = $('<tr></tr>');
+				let tdName = $('<td></td>');
+				let tdControll = $('<td></td>');
+				let tdDate = $('<td></td>');
+				let a = $('<a></a>')
+				
+				let delBut = $('<button></button>');
+				delBut.attr('href','/controll/' + data.dir[i] + '/' + 'delete');
+				delBut.attr('class', 'delete-button');
+				delBut.append('❌Удалить');
+				delBut.click(DelBut_Click);
+				
+				let renameBut = $('<button></button>');
+				renameBut.attr('href','/controll/' + data.dir[i] + '/' + 'rename');
+				renameBut.attr('class', 'rename-button');
+				renameBut.append('💬Переименовать');
+				renameBut.click(RenameBut_Click);
+				
+				//a.attr('href','/download/'+data.dir[i]);
+				a.append(data.dir[i] + '\\');
+				a.click(function(e){
+						pageData.dir = pageData.dir + data.dir[i] + '\\';
+						oldDir.push(pageData.dir);
+					});
+				a.click(ReloadContent);
+				
+				tdName.append(a);
+				tdName.attr('class', 'col-name');
+				
+				tdControll.append(delBut).append(" ").append(renameBut);
+				tdControll.attr('class', 'col-controll');
+				
+				tdDate.append("");
+				tdDate.attr('class', 'col-data');
+				
+				tr.append(tdName).append(tdControll).append(tdDate);
+				
+				$('#table-view').append(tr);
+			}
 		});
 }
 
@@ -82,6 +124,11 @@ $(document).ready(function() {
 	
 	
 	$('button#reload').click(ReloadContent);
+	$('button#back-dir').click(function(e){
+			if (oldDir.length > 1) oldDir.pop(oldDir.length - 1);
+			pageData.dir = oldDir[oldDir.length - 1];
+			ReloadContent();
+		});
 	
 	//first load
 	ReloadContent();

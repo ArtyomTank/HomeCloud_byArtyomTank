@@ -39,14 +39,14 @@ app.get("/",function (req, res){
 })
 
 app.get("/view-uploaded",function(req,res,next){
-	//console.log(req.query);
+	console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
 	let files = new Array();
 	let dir = new Array();
-	
-	fs.readdir(ServerCloudFiles, function(err, items) {
+	let path = ServerCloudFiles + '\\' + req.query.dir;
+	fs.readdir(path, function(err, items) {
 		for (var i=0; i<items.length; i++) {
-			if(fs.statSync(ServerCloudFiles + '\\' + items[i]).isDirectory()){
+			if(fs.statSync(path + items[i]).isDirectory()){
 				dir.push(items[i]);
 			}
 			else{

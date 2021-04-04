@@ -70,6 +70,10 @@ div#result{
 
 #table-view tr:hover{
 	background: #dddddd;
-	transition:1s;
+	transition:0.1s;
+}
+
+#table-view .col-name a{
+	cursor:pointer;
 }
 
