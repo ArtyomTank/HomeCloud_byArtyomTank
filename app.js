@@ -38,25 +38,31 @@ app.get("/",function (req, res){
 	res.render("index.hbs");
 })
 
-app.get("/view-uploaded",jsonParser,function(req,res,next){
-	console.log(req.query);
+app.get("/view-uploaded",function(req,res,next){
+	//console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
 	
 	fs.readdir(ServerCloudFiles, function(err, items) {
-		/*console.log(items);
-
-		for (var i=0; i<items.length; i++) {
-			console.log(items[i]);
-		}*/
 		res.json(items);
 	});
-	//res.json(req.query);
 })
 
 app.get("/download/:file",function (req, res){
 	let filePath = ServerCloudFiles + '\\' + req.params["file"];
 	if (fs.existsSync(filePath)) {
 		res.sendFile(filePath);
+	}
+})
+
+app.get("/controll/:file/:action",function(req,res){
+	
+	if(req.params['action'] == 'delete'){
+		filePath = ServerCloudFiles + '\\' + req.params["file"];
+		fs.unlink(filePath, (err) => {
+				if (err) console.log(err); // если возникла ошибка    
+				else console.log(`${req.params["file"]} was deleted`);
+				res.send(`${req.params["file"]} was deleted`)
+			});
 	}
 })
 

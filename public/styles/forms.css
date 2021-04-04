@@ -46,7 +46,7 @@
 div#result{
 	font-family:monospace, consolas;
 }
-button#reload{
+#files-viewer button{
 	padding: 0px;
     border-style: none;
     border-bottom-style: groove;

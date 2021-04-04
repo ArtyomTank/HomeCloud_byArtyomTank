@@ -9,23 +9,58 @@
 </table>
 <script type="text/javascript">
 	//init
-	let pageData = {'page':'1', 'length':30, 'dir':"/"};
-	let tdControll = $('<td></td>');
+	let pageData = {'page':1, 'length':50, 'dir':"/"};
+	
+	function RenameBut_Click(e){
+		let elem = $(e.target);
+		$.get(elem.attr('href'),function(data){});
+	}
+	
+	function ViewBut_Click(e){
+		let elem = $(e.target);
+		$.get(elem.attr('href'),function(data){});
+	}
+	
+	function DelBut_Click(e){
+		let elem = $(e.target);
+		$.get(elem.attr('href'),function(data){});
+	}
 	
 	function ReloadContent(){
 		$('#table-view').html('<tr><th>Имя</th><th>Управление</th><th>Дата</th></tr>');
 		$.get('/view-uploaded', pageData,
 			function(data) {
-				console.log(data);
+				//console.log(data);
 				for(let i in data){
 					let tr = $('<tr></tr>');
 					let tdName = $('<td></td>');
+					let tdControll = $('<td></td>');
 					let tdDate = $('<td></td>');
 					let a = $('<a download></a>')
 					
+					let delBut = $('<button></button>');
+					delBut.attr('href','/controll/' + data[i] + '/' + 'delete');
+					delBut.attr('class', 'delete-button');
+					delBut.append('❌Удалить');
+					delBut.click(DelBut_Click);
+					
+					let viewBut = $('<button></button>');
+					viewBut.attr('href','/controll/' + data[i] + '/' + 'view');
+					viewBut.attr('class', 'view-button');
+					viewBut.append('👁Смотреть');
+					viewBut.click(ViewBut_Click);
+					
+					let renameBut = $('<button></button>');
+					renameBut.attr('href','/controll/' + data[i] + '/' + 'rename');
+					renameBut.attr('class', 'rename-button');
+					renameBut.append('💬Переименовать');
+					renameBut.click(RenameBut_Click);
+					
 					a.attr('href','/download/'+data[i]);
 					a.append(data[i]);
+					
 					tdName.append(a);
+					tdControll.append(delBut).append(viewBut).append(renameBut);
 					tr.append(tdName).append(tdControll).append(tdDate);
 					
 					$('#table-view').append(tr);
@@ -33,7 +68,7 @@
 			});
 	}
 	
-	$('button#reload').bind('click',ReloadContent);
+	$('button#reload').click(ReloadContent);
 	
 	//first load
 	ReloadContent();
