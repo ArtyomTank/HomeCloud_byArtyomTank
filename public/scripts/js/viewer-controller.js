@@ -4,7 +4,7 @@ let oldDir = new Array("");
 function RenameBut_Click(e){
 	let elem = $(e.target);
 	let url = elem.attr('href');
-	$.get(url, {'newname':prompt(`Введите новое название для ${url.split('/')[2]}`)}, function(data){
+	$.get(url, {'newname':prompt(`Введите новое название для ${url.split('/')[2]}`), 'dir':pageData.dir}, function(data){
 			ReloadContent();
 			alert(data);
 		});
@@ -22,7 +22,7 @@ function DelBut_Click(e){
 	let url = elem.attr('href');
 	if (!confirm(`Вы действительно желаете удалить ${url.split('/')[2]}?`)) 
 		return;
-	$.get(url,function(data){
+	$.get(url, pageData, function(data){
 			ReloadContent();
 			alert(data);
 		});
@@ -116,6 +116,7 @@ function ReloadContent(){
 				
 				$('#table-view').append(tr);
 			}
+			$('#pathDir').html('<b>Путь: \\' + pageData.dir + '</b>');
 		});
 }
 
@@ -129,6 +130,7 @@ $(document).ready(function() {
 			pageData.dir = oldDir[oldDir.length - 1];
 			ReloadContent();
 		});
+	
 	
 	//first load
 	ReloadContent();

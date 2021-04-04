@@ -39,7 +39,7 @@ app.get("/",function (req, res){
 })
 
 app.get("/view-uploaded",function(req,res,next){
-	console.log(req.query);
+	//console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
 	let files = new Array();
 	let dir = new Array();
@@ -67,16 +67,33 @@ app.get("/download/:file",function (req, res){
 })
 
 app.get("/controll/:file/:action",function(req,res){
-	let filePath = ServerCloudFiles + '\\' + req.params["file"];
+	let filePath = ServerCloudFiles + '\\' + req.query.dir + req.params["file"];
 	
 	try{
 		if (fs.existsSync(filePath)){
 			//delete
 			if(req.params['action'] == 'delete'){
-				fs.unlink(filePath, (err) => {
-						if (err) throw err; // если возникла ошибка    
-						console.log(`${req.params["file"]} was deleted`);
-						res.send(`${req.params["file"]} was deleted`);
+				if (fs.statSync(filePath).isDirectory())
+					fs.rmdir(filePath, (err) => {//delete dir
+						if (err) {
+							console.error(err); // если возникла ошибка  
+							res.send('Ошибка! Возможно папка не пуста. ');
+						}
+						else{
+							console.log(`${req.params["file"]} был удалён`);
+							res.send(`${req.params["file"]} был удалён`);
+						}
+					});
+				else 
+					fs.unlink(filePath, (err) => {//delete file
+						if (err) {
+							console.error(err); // если возникла ошибка
+							res.send(err);
+						}
+						else{
+							console.log(`${req.params["file"]} был удалён`);
+							res.send(`${req.params["file"]} был удалён`);
+						}
 					});
 			}
 			//rename
