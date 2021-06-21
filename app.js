@@ -3,16 +3,13 @@ const config = require('config');
 const hbs = require('hbs');
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const jsonParser = express.json();
 
-const PORT = config.get('port') || 5001;
+const PORT = config.get('port') || 5000;
 const ServerCloudFiles = config.get('filesPath') || 'C:\\HomeCloudUserFiles';
-
-app.set("view engine","hbs");
-app.use(express.static(__dirname + "/public"));
-hbs.registerPartials(__dirname + "/views/partials");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -33,37 +30,60 @@ if (!fs.existsSync(ServerCloudFiles)) {
 }
 
 
+
+app.set("view engine","hbs");
+app.use(express.static(path.join(__dirname, "/public")));
+
+hbs.registerPartials(path.join(__dirname, "/views/partials"));
+
 //middlewares
 app.get("/",function (req, res){
 	res.render("index.hbs");
 })
 
-app.get("/view-uploaded",function(req,res,next){
+app.get("/view-uploaded",function(req,res){
 	//console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
 	let files = new Array();
 	let dir = new Array();
-	let path = ServerCloudFiles + '\\' + req.query.dir;
-	fs.readdir(path, function(err, items) {
+	let d = new Object();
+	d.files = new Array();
+	d.dir = new Array();
+	//let path_v = ServerCloudFiles + '\\' + req.query.dir;
+	let path_v = path.join(ServerCloudFiles, req.query.dir, '/');
+
+	fs.readdir(path_v, function(err, items) {
 		for (var i=0; i<items.length; i++) {
-			if(fs.statSync(path + items[i]).isDirectory()){
+			let pathF = path_v + items[i];
+			//console.log(pathF);
+			if(fs.statSync(pathF).isDirectory()){
 				dir.push(items[i]);
+				d.dir.push(fs.statSync(pathF));
 			}
 			else{
 				files.push(items[i]);
+				d.files.push(fs.statSync(pathF));
 			}
 		}
-		res.json({'files':files, 'dir':dir});
+		let sendJson = {
+				'files':files, 
+				'dir':dir, 
+				'stat':d
+			};
+		//fs.writeFileSync('log/log.json', JSON.stringify(sendJson), function(err){console.log(err)});
+		res.json(sendJson);
 	});
 })
 
-app.get("/download/:file",function (req, res){
-	let filePath = ServerCloudFiles + '\\' + req.params["file"];
+app.get("/download/*",function (req, res){
+	let filePath = ServerCloudFiles + '\\' + req.params[0];
+	//console.log(req.params);
 	if (fs.existsSync(filePath)) {
 		res.sendFile(filePath);
 	} else {
-		res.send();
+		res.status(404);
 	}
+
 })
 
 app.get("/controll/:file/:action",function(req,res){
@@ -77,7 +97,7 @@ app.get("/controll/:file/:action",function(req,res){
 					fs.rmdir(filePath, (err) => {//delete dir
 						if (err) {
 							console.error(err); // если возникла ошибка  
-							res.send('Ошибка! Возможно папка не пуста. ');
+							res.send('Ошибка! Возможно папка не пуста. Для удаления папки удалите все файлы внутри');
 						}
 						else{
 							console.log(`${req.params["file"]} был удалён`);
@@ -126,12 +146,13 @@ app.post("/upload", upload.single("filedata"), function (req, res, next) {
         res.send(`${filedata.filename} загружен`);
 })
 
-app.get("*", function(req,res){
+app.use("*", function(req,res){
 	res.render("err404.hbs");
 })
 
 //listen
  app.listen(PORT, ()=>{
+	console.log('\n>>>>>>>>>>>>');
 	console.log(`Домашнее Облако запущено на порте ${PORT}`);
 	console.log(`Файлы находятся в ${ServerCloudFiles}`)
 });
