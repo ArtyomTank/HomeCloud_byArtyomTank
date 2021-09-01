@@ -1,0 +1,38 @@
+#fileitems-container{
+	text-align:center;
+}
+#files-viewer .controll-button{
+	padding: 0px;
+    border-style: none;
+    /*border-bottom-style: groove;*/
+	background:none;
+	cursor:pointer
+}
+#files-viewer .fileitem{
+	display:inline-block;
+	text-align:center;
+	width:250px;
+	height:300px;
+	margin:4px;
+	padding:4px;
+	background-color:gray;
+	vertical-align:bottom;
+}
+
+
+#files-viewer .fileitem .preview{
+	max-width:250px;
+	min-width:250px;
+	max-height:250px;
+	min-height:250px;
+	display:inline-table;
+	
+}
+#files-viewer .fileitem .preview .content-wrap{
+	display:table-cell;
+	vertical-align:middle;
+}
+#files-viewer .fileitem .preview .all-content{
+	max-width:100%;
+	max-height:100%;
+}
