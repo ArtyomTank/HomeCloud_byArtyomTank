@@ -4,6 +4,7 @@ const hbs = require('hbs');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+var mime = require("mime");
 
 const app = express();
 const jsonParser = express.json();
@@ -44,12 +45,14 @@ app.get("/",function (req, res){
 app.get("/view-uploaded",function(req,res){
 	//console.log(req.query);
 	if(!req.query) return res.sendStatus(400);
+	
 	let files = new Array();
-	let dir = new Array();
-	let d = new Object();
-	d.files = new Array();
-	d.dir = new Array();
-	//let path_v = ServerCloudFiles + '\\' + req.query.dir;
+	/* files.name = new Array();
+	files.mime = new Array();
+	files.stats = new Array(); */
+	
+	let dirs = new Array();
+	
 	let path_v = path.join(ServerCloudFiles, req.query.dir, '/');
 
 	fs.readdir(path_v, function(err, items) {
@@ -57,18 +60,24 @@ app.get("/view-uploaded",function(req,res){
 			let pathF = path_v + items[i];
 			//console.log(pathF);
 			if(fs.statSync(pathF).isDirectory()){
-				dir.push(items[i]);
-				d.dir.push(fs.statSync(pathF));
+				let o = {
+					'name':items[i],
+					'stats':fs.statSync(pathF)
+				};
+				dirs.push(o);
 			}
 			else{
-				files.push(items[i]);
-				d.files.push(fs.statSync(pathF));
+				let o = {
+					'name':items[i],
+					'stats':fs.statSync(pathF),
+					'mime':mime.getType(pathF)
+				};
+				files.push(o);
 			}
 		}
 		let sendJson = {
 				'files':files, 
-				'dir':dir, 
-				'stat':d
+				'dirs':dirs
 			};
 		//fs.writeFileSync('log/log.json', JSON.stringify(sendJson), function(err){console.log(err)});
 		res.json(sendJson);

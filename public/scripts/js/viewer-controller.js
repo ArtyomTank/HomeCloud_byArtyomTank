@@ -1,6 +1,29 @@
 let pageData = {'page':1, 'length':50, 'dir':""}; //dir = "mn/gg/" or "nm/" or "" e.t.c.
 let oldDir = new Array("");
 
+
+function ReloadContent(){
+	//let fileItems = $('#fileitems-container');
+	let container = $('<div></div>');
+	container.attr('id','fileitems-container');
+	$('#files-viewer').html(container);
+	$.get('/view-uploaded',pageData,getFilesContent);
+}
+function getFilesContent(data){
+	let path = pageData.dir;
+	for(let file of data.files){
+		let buttons =[
+				new ActionButtonControll('❌Удалить', 'delete-button', DelBut_Click),
+				new ActionButtonControll('💬Переименовать', 'rename-button', RenameBut_Click),
+				new ActionButtonControll('👁Смотреть', 'view-button', ViewBut_Click),
+				new ActionButtonControll('⬇Скачать', 'download-button', DownloadBut_Click)
+			]
+		let fileItem = new FileItemControll(file,path,buttons);
+		$('#fileitems-container').append(fileItem.getElement());
+	}
+}
+
+/*
 function ReloadContent(){
 	$('#table-view').html('<tr><th>Имя</th><th>Управление</th><th>Дата</th></tr>');
 	$.get('/view-uploaded', pageData,
@@ -14,14 +37,14 @@ function ReloadContent(){
 				
 				let delBut = ConstructorControllButtonHref(
 						'❌Удалить',
-						'/controll/' + data.files[i] + '/' + 'delete',
+						'/controll/' + data.files[i].name + '/' + 'delete',
 						'delete-button',
 						DelBut_Click
 					);
 				
 				let viewBut = ConstructorControllButtonHref(
 						'👁Смотреть',
-						'/controll/' + data.files[i] + '/' + 'view',
+						'/controll/' + data.files[i].name + '/' + 'view',
 						'view-button',
 						ViewBut_Click
 					);
@@ -29,23 +52,18 @@ function ReloadContent(){
 				
 				let renameBut = ConstructorControllButtonHref(
 						'💬Переименовать',
-						'/controll/' + data.files[i] + '/' + 'rename',
+						'/controll/' + data.files[i].name + '/' + 'rename',
 						'rename-button',
 						RenameBut_Click
 					);
 				
-				/* let a = $('<a download></a>');
-				a.attr('href',src);
-				a.append(data.files[i]);
-				a.click(ReloadContent); */
 				
-				let src = '/download/'+pageData.dir+data.files[i];
+				let src = '/download/'+pageData.dir+data.files[i].name;
 				let a = ConstructorControllButtonHref(
-						data.files[i],
-						'/download/'+pageData.dir+data.files[i],
+						data.files[i].name,
+						'/download/'+pageData.dir+data.files[i].name,
 						'download-button',
-						DownloadBut_Click,
-						{'filename': data.files[i]}
+						DownloadBut_Click
 					);
 				
 				//tdName.append(`<img width="16px" src="icons/file1.ico"/>`);
@@ -72,21 +90,21 @@ function ReloadContent(){
 				let a = $('<a></a>')
 				
 				let delBut = $('<button></button>');
-				delBut.attr('href','/controll/' + data.dir[i] + '/' + 'delete');
+				delBut.attr('href','/controll/' + data.dir[i].name + '/' + 'delete');
 				delBut.attr('class', 'delete-button');
 				delBut.append('❌Удалить');
 				delBut.click(DelBut_Click);
 				
 				let renameBut = $('<button></button>');
-				renameBut.attr('href','/controll/' + data.dir[i] + '/' + 'rename');
+				renameBut.attr('href','/controll/' + data.dir[i].name + '/' + 'rename');
 				renameBut.attr('class', 'rename-button');
 				renameBut.append('💬Переименовать');
 				renameBut.click(RenameBut_Click);
 				
 				//a.attr('href','/download/'+data.dir[i]);
-				a.append(data.dir[i] + '\\');
+				a.append(data.dir[i].name + '\\');
 				a.click(function(e){
-						pageData.dir = pageData.dir + data.dir[i] + '\\';
+						pageData.dir = pageData.dir + data.dir[i].name + '\\';
 						oldDir.push(pageData.dir);
 					});
 				a.click(ReloadContent);
@@ -108,7 +126,7 @@ function ReloadContent(){
 			$('#pathDir').html('<b>Путь: \\' + pageData.dir + '</b>');
 		});
 }
-
+*/
 $(document).ready(function() {
 	//init
 	
