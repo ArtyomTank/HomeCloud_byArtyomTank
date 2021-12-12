@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #uploader{
 	border:solid 1px black;
 	padding:2px
@@ -72,3 +73,79 @@ div#result{
 	cursor:pointer;
 }
 
+=======
+#uploader{
+	border:solid 1px black;
+	padding:2px
+}
+@media only screen and (max-device-width: 720px) {
+	input, button{
+		font-size:0.8em;
+		margin-block-start:0.4em;
+		margin-block-end:0.4em;
+	}
+	#result{
+		font-size:0.7em;
+	}
+}
+
+
+#uploader>#file-list{
+	display:block;
+	margin:10px;
+	padding:19px;
+	border:dotted 1px black;
+}
+
+#uploader>#file-list>*{
+	display:block;
+	
+	
+}
+#uploader>#file-list>div{
+	margin-bottom:10px;
+	
+}
+#uploader>#file-list>div>input{
+	display:block;
+	margin-bottom:5px;
+	margin-top:5px;
+	
+}
+#uploader>#file-list>.filedata{
+	margin-bottom:6px;
+}
+#uploader>#submit{
+	margin:10px;
+}
+
+div#result{
+	font-family:monospace, consolas;
+}
+
+
+#table-view {
+	border:solid 1px grey;
+	width:100%;
+	margin-top:0.5em;
+	padding:0px;
+}
+#table-view td{
+	border-right:solid 1px grey;
+	padding:10px;
+}
+#table-view th{
+	border-right:solid 1px grey;
+	border-bottom:solid 1px grey;
+}
+
+#table-view tr:hover{
+	background: #dddddd;
+	transition:0.1s;
+}
+
+#table-view .col-name a{
+	cursor:pointer;
+}
+
+>>>>>>> 9747d1f14c9529e22b516ab58682abe61441bd1e
